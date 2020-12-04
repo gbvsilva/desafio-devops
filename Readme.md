@@ -1,1 +1,1 @@
-Use o arquivo desafio.yaml
+Use o arquivo docker-compose.yaml
