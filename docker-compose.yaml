@@ -1,9 +1,42 @@
 version: '3'
 
 services:
-    nginx:
-        image: nginx
+    postgres:
+        image: postgres
+        container_name: postgres
         volumes:
-            - ./nginx:/usr/share/nginx/html
+            - postgres_data:/var/lib/postgresql/data/
+        environment:
+            - POSTGRES_DB=postgres
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+        networks:
+            - default
+
+    web:
+        image: django-sandbox
+        container_name: web
+        command: python manage.py runserver 0.0.0.0:8000
+        volumes:
+            - .:/code
         ports:
-            - 8080:80
+            - 8000:8000
+        networks:
+            - default
+    
+    front:
+        image: node
+        container_name: front
+        ports:
+            - 3000:3000
+        networks:
+            default
+
+networks:
+    default:
+        ipam:
+            config:
+                - subnet: 172.18.1.0/24
+
+volumes:
+    postgres_data:
